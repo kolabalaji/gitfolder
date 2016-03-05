@@ -10,8 +10,23 @@ Files used in CD
 Description
 ————————————————————————-
 1.build.xml 
-Description:build.xml is the ant script file to create the war file with build number and this the artefact creating script.
 
+Description:
+build.xml is the ant script file to create the war artifect file with build number.
+
+
+2.CDDeployment.pp
+
+Description:
+CDDeployment file is a manifest file to do the continous deployment.
+
+Features in this file:
+1.Creates the timestamp folder to save the existing application backup in Nexus folder.
+2.Shutting down the server
+3.Taking the backup of existing artifect (WAR) and saving in Nexus repo
+4.Deleting the WAR and applicaiton folder in the tomcat deployment directory.
+5.Taking the WAR from git repo and placing at tomcat server....
+6.Starting the tomcat server
 
 
 
