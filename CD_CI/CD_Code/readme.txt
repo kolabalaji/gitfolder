@@ -5,7 +5,7 @@ Files used in CD
 1.build.xml
 2.CDeployment.pp
 3.RollBack.pp
-4.service.pp
+4.ServiceController.pp
 
 Description
 ————————————————————————-
@@ -29,5 +29,14 @@ Features in this file:
 6.Starting the tomcat server
 
 
+4.ServiceController.pp
 
+Description:puppet manifest to start the apache and mysql database services 
+
+Features in the program
+---------------------------
+
+1.Starting up the apache server
+2.Starting up the mysql dabatabase server
+ 
 
