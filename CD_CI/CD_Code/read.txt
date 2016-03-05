@@ -1,0 +1,18 @@
+#continuous Integration Using puppet
+
+Files used in CD 
+-------------------------
+1.build.xml
+2.CDeployment.pp
+3.RollBack.pp
+4.service.pp
+
+Description
+————————————————————————-
+1.build.xml 
+Description:build.xml is the ant script file to create the war file with build number and this the artefact creating script.
+
+
+
+
+
