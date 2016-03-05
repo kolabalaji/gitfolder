@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Router Concept</title>
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+		<link href="css/style.css" rel="stylesheet" type="text/css"/>  
+		<!-- Loading main JS file is enough as we are using require.js -->
+		<script data-main="js/mainJS" src="js/libs/require.js"></script> 
+	</head>
+	<body>
+		<div id="content_area">
+			
+			<!-- Left pane starts -->	
+			<div id="left_nav">
+				<ul>
+				
+				
+				
+					<!--
+						Links to different pages are given below...
+						href attributes contain # values for the navigation
+					-->	
+					<li><a href="#animals">Animals Page</a></li>
+					<li><a href="#flowers">Flowers Page</a></li>
+					<li><a href="#menu/rose">Rose Page</a></li>
+					<li><a href="#menu/cat">Cat Page</a></li>
+				</ul>
+			</div>
+			<!-- Left pane ends -->
+			
+			<div id="content">
+				<!-- Loading content here dynamically from corresponding views-->							
+			</div>
+		</div>
+	</body>
+</html>

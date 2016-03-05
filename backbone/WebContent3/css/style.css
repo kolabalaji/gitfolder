@@ -1,0 +1,40 @@
+html,body{
+	margin:0;
+	padding:0;
+}	
+#content_area{
+	width:960px;
+	margin:auto;
+}
+#left_nav{
+	width:260px;
+	height:500px;
+	background:#ffff99;
+	display:inline-block;
+	padding-top:100px;
+}
+#left_nav li{
+	height:100px;
+}
+#content{
+	vertical-align:top;
+	width:490px;	
+	height:400px;
+	background:#d0d0d0;
+	display:inline-block;
+	padding:100px;
+}
+#content h1{
+	font-size:20px;
+}
+#content input[type="button"]{
+	width:100px;
+	height:30px;
+	margin-right:50px;
+	margin-top:50px;
+	font-size:18px;
+}
+#content strong{
+	font-size:22px;
+	color:blue;
+}
