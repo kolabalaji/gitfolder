@@ -67,6 +67,3 @@ exec{"***************Tomcat starting up***************:
 	path =>"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:",
 	command =>"sh startup.sh",
 }
-
-
-}

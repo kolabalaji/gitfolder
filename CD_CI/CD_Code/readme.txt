@@ -2,6 +2,7 @@
 
 Files used in CD 
 -------------------------
+
 1.build.xml
 2.CDeployment.pp
 3.RollBack.pp
@@ -21,6 +22,7 @@ Description:
 CDDeployment file is a manifest file to do the continous deployment.
 
 Features in this file:
+---------------------------
 1.Creates the timestamp folder to save the existing application backup in Nexus folder.
 2.Shutting down the server
 3.Taking the backup of existing artifect (WAR) and saving in Nexus repo
