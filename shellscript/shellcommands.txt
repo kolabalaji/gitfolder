@@ -1,0 +1,3 @@
+command to the space in the disk
+
+#du -s * | sort -nr >text.txt
