@@ -1,0 +1,10 @@
+package com.learningjava;
+
+import java.awt.*;
+
+
+public class HelloComponent extends JComponent{
+
+	
+
+}

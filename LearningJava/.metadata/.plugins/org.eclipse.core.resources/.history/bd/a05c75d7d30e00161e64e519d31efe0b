@@ -1,0 +1,20 @@
+package com.learningjava.chapter2;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+public class HelloJava {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		JFrame jf = new JFrame("Hello Java");
+		JLabel jl = new JLabel("Welcome to Learning Java",JLabel.CENTER);
+		
+		jf.add(jl);
+		
+		jf.setSize(300, 300);
+		jf.setVisible(true);
+		
+	}
+
+}
