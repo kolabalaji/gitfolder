@@ -573,3 +573,18 @@ java.lang.NullPointerException
 java.lang.NullPointerException
 18:52:56,331 ERROR workbench:84 - org.eclipse.ui.workbench - org.eclipse.ui - 0 - Unhandled event loop exception
 java.lang.NullPointerException
+16:44:06,474  INFO Activator:55 - Logging is configured using using log4j /Users/sribalajikola/Downloads/eclipse/configuration/org.eclipse.osgi/1370/0/.cp/log4j.properties
+16:44:10,454  WARN workbench:84 - org.eclipse.ui.workbench - org.eclipse.jface - 0 - Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+16:44:12,198 ERROR runtime:84 - org.eclipse.core.runtime - org.eclipse.mylyn.tasks.core - 0 - Unexpected error while loading repository template extensions
+16:44:23,439  WARN workbench:84 - org.eclipse.ui.workbench - org.eclipse.jface - 0 - Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+16:44:29,180  INFO services:84 - com.sap.ide.ui5.services - 1 - Internal Info
+   Plugin Name: SAPUI5 Services
+   Plugin ID  : com.sap.ide.ui5.services
+   Class      : com.sap.ide.ui5.services.preferences.UI5LibrariesRegistry
+   Method     : getBundleNamesUI5CoreLibs
+   Message    : found UI libraries null
+   Exception  :
+17:08:03,859 ERROR workbench:84 - org.eclipse.ui.workbench - org.eclipse.ui - 4 - Conflicting handlers for org.eclipse.wst.sse.ui.format: {org.eclipse.wst.sse.ui.internal.handlers.FormatHandler} vs {org.eclipse.wst.sse.ui.internal.handlers.FormatHandler}
+17:08:34,079 ERROR workbench:84 - org.eclipse.ui.workbench - org.eclipse.ui - 4 - Conflicting handlers for org.eclipse.wst.sse.ui.format: {org.eclipse.wst.sse.ui.internal.handlers.FormatHandler} vs {org.eclipse.wst.sse.ui.internal.handlers.FormatHandler}
+17:09:18,784 ERROR workbench:84 - org.eclipse.ui.workbench - org.eclipse.ui - 4 - Conflicting handlers for org.eclipse.wst.sse.ui.format: {org.eclipse.wst.sse.ui.internal.handlers.FormatHandler} vs {org.eclipse.wst.sse.ui.internal.handlers.FormatHandler}
+17:10:08,721 ERROR workbench:84 - org.eclipse.ui.workbench - org.eclipse.ui - 4 - Conflicting handlers for org.eclipse.wst.sse.ui.format: {org.eclipse.wst.sse.ui.internal.handlers.FormatHandler} vs {org.eclipse.wst.sse.ui.internal.handlers.FormatHandler}
