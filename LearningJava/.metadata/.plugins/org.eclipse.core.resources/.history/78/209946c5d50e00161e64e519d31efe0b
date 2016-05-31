@@ -1,9 +1,0 @@
-package com.learningjava;
-
-import javax.swing.JComponent;
-
-public class HelloComponent extends JComponent{
-
-	
-
-}
