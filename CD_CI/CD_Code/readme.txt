@@ -1,5 +1,13 @@
 #continuous Integration Using puppet
 
+Puppet resources
+#https://forge.puppet.com
+puppet commands
+
+#$puppet module generate CD_Automation  # puppet command to generate a moudle in puppet
+
+
+
 Files used in CD 
 -------------------------
 
