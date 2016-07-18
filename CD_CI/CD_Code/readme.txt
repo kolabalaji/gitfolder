@@ -48,5 +48,11 @@ Features in the program
 
 1.Starting up the apache server
 2.Starting up the mysql dabatabase server
- 
+
+User creation automation using AJax:
+
+URL :http://localhost:8080/AjaxTest/ 
+
+
+
 
