@@ -14,4 +14,5 @@ echo 'deleted files'
 }
 clear
 echo "Executed successfully"
-
+today=date+`%y+%m+%d`
+$today
