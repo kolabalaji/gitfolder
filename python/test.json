@@ -1,0 +1,10 @@
+{
+        "payload": "{\"PerformAutomation\":{\"AutomationInputDictionary\":{\"Search.Phase\":\"Outage_CompletionPhase\",\"Search.StartDate\": \"02/12/2016 10:35:00 PM\",\"Search.EndDate\":\"02/12/2016 11:59:59 PM\"}, \"ProcessName\":\"OutageProcess\",\"ProfileName\":\"NBNOutage\",\"APIVersion\":\"\",\"AppId\":\"\",\"CommandExecutionWindow\":\"\",\"CommandGenerationSource\":\"\",\"Country\":\"\",\"Instance\":\"\",\"PartnerId\":\"\",\"ReferenceCode\":\"\",\"Timestamp\":\"8:00 PM\",\"UserName\":\"SVC_HFC_PRD_RORobot\",\"VID\":\"\"}}",
+        "content_type": "string",
+        "content_encoding": "test/json",
+        "profile": "NBNOutage",
+        "expiration": 172800000,
+        "app_id": "CDTool",
+        "source_message_id": "CDTool",
+        "header": null
+}
