@@ -1,0 +1,21 @@
+#!/bin/bash
+#echo "Can you please enter your name"
+#read name
+display="HELLO WORLD Balaji"
+CPU_USAGE=`ps -A -o %cpu | awk '{s+=$1} END {print s "%"}'`
+MEMORY=`df -h /home | grep % | awk '{ print $(NF -1) }'`
+cat << noEcho
+<HTML>
+<HEAD>
+<TITLE> Cool Bash trick </TITLE>
+</HEAD>
+<BODY>
+$display
+<pre><h1>CPU:$CPU_USAGE</h1></pre>
+<pre><h1>MEMORY:$MEMORY</h1></pre>
+</BODY>
+</HTML>
+noEcho
+
+
+
