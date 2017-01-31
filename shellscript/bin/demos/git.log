@@ -1,0 +1,17 @@
+commit 96d2ee65233d0c0939d058c8130cb19e1a8ebf4a
+Author: srikolabalaji <srikolabalaji@yahoo.com>
+Date:   Sat Jan 28 14:02:50 2017 +1100
+
+    Updating the shell script
+
+commit 858216bc7378ae93613c89cdfe671dc64e1f9dea
+Author: srikolabalaji <srikolabalaji@yahoo.com>
+Date:   Thu Jan 5 14:51:57 2017 +1100
+
+    Adding the webhtml
+
+commit 70c30b3c86785fe39a5ef80645e3e564b59f6c49
+Author: srikolabalaji <srikolabalaji@yahoo.com>
+Date:   Sun Jan 1 18:35:44 2017 +1100
+
+    Adding the adhoc commands
