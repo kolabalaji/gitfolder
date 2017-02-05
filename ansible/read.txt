@@ -1,0 +1,6 @@
+ansible-playbook -i inventory/A1_ENV -vvv playbooks/helloansible.yaml >read.txt
+
+few usefull command:
+ansible -m localhost setup
+ansible localhost -m setup
+apt install ansible
