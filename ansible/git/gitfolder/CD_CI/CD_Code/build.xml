@@ -1,0 +1,61 @@
+<!- Build script to build the WAR file-->
+<!?xml version="1.0" encoding="UTF-8"?>
+<!-- author : kola_balaji-->
+
+<!-- basedir where we whave git or svn or tfs source code configured-->
+
+<project basedir="/home/admin/DiamondSaleApp/Diamonds" dafault="war" name="DiamondSale">
+
+	<!-- adding the lib folder to the classpath-->
+	<path id="compile.classpath">
+	<fileset dir="./WebContent/WEB-INF/lib">
+	<include name="*.jar"/>
+	</fileset>
+	</path>
+
+<!--Creating the directory for build folder for classes and Dist for war-->
+
+	<target name="init">
+	<echo>Creating the build and dist directories></echo>
+	<mkdir dir="build/classes"/>
+	<mkdir dir"dist"/>
+	<echo>Created the build and dist directories</echo>
+	</target>
+
+<!--Compling the source folder and storing the classes files at build/classes-->
+
+	<target name="compile" depends="clean,init">
+	<javac src="src" debug="true" destdir="build/classes">
+	<classpath refid="compile.classpath"/>
+	</javac>	
+	<echo>Compiled source code</echo>
+	</target>
+
+<!-- Creating the war file with build number in property file-->
+
+	<target name="increment">
+	<propertyfile file="build.properties">
+	<entry key="build.number" type="init" operation="+" default="0"/>
+	</propertyfile>
+	<echo message="Build Number is ${build.number}"/>
+	</target>
+	
+	<target name="war" depends="compile,increment">
+	<war destfile="dist/DiamondSale_V${build.number}.war">
+	<fileset dir="WebContent"/>
+	<lib dir="./WebContent/WEB-INF/lib"/>
+	<classes dir="build/classes"/>
+	</war>
+	<echo>WAR CREATED</echo>
+	</target>
+
+<!-- Deleting the pervious WAR file before creating the new WAR  -->
+
+	<target name="clean">
+	<delete dir="dist/"/>
+	<echo>Old War has been deleted successfully</echo>
+	</target>
+
+</project>
+
+

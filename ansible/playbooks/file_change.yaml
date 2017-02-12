@@ -1,0 +1,12 @@
+--- 
+- 
+  name: "Hello Ansible - quick start"
+  hosts: localhost
+  sudo: yes
+
+  tasks: 
+    - 
+     name: "File change"
+     lineinfile: dest=/root/ansible/config.txt regexp='^#email*' line='email=http://http://suzi.com' backup=yes mode=0644
+
+
