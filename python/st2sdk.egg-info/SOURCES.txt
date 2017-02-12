@@ -2,6 +2,7 @@ LICENSE
 MANIFEST.in
 README.rst
 requirements.txt
+setup.cfg
 setup.py
 tox.ini
 scripts/common.sh
@@ -14,6 +15,7 @@ scripts/st2-check-validate-yaml-file
 scripts/st2.tests.conf
 st2sdk/__init__.py
 st2sdk/app.py
+st2sdk/setup.py
 st2sdk/shell.py
 st2sdk.egg-info/PKG-INFO
 st2sdk.egg-info/SOURCES.txt
@@ -21,6 +23,9 @@ st2sdk.egg-info/dependency_links.txt
 st2sdk.egg-info/entry_points.txt
 st2sdk.egg-info/requires.txt
 st2sdk.egg-info/top_level.txt
+st2sdk/st2sdk/__init__.py
+st2sdk/st2sdk/app.py
+st2sdk/st2sdk/shell.py
 st2sdk/templates/README.md
 st2sdk/templates/config.yaml
 st2sdk/templates/pack.yaml
