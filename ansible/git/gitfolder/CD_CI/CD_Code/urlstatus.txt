@@ -1,3 +1,0 @@
-http://www.google.com  302
-http://www.gmail.com  301
-http://www.yahoo.com  301

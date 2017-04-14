@@ -1,4 +1,0 @@
----
-# tasks file for common
-- name: Hello server
-      shell: date >> now.txt
