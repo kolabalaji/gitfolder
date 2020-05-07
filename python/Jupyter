@@ -1,2 +1,26 @@
 JUPyter
 
+Getting the code:
+ https://github.com/pdeitel/PythonFundamentalsLiveLessons.git
+ 
+ Installing Ananconda
+ 
+ * Anaconda Python distribution
+ 
+    # IPython interpreter
+    # local Jupyter Notebooks server
+    # most of the Python and data science liibraries we use
+    # various other software packages, such as the Spyder IDE and Visual Studio Code
+    
+    
+    
+ Updating Anaconda
+ 
+ Mac-- Execute the following commands
+ 
+  conda update conda
+  conda update --all
+  
+ 
+ 
+ 
