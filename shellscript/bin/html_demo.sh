@@ -1,6 +1,7 @@
  #!/bin/bash
 
-# make_page - A script to produce an HTML file
+# Make_page - A script to produce an HTML file
+# html pages using shell script
 
 echo "<HTML>"
 echo "<HEAD>"
