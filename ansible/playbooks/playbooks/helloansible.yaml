@@ -1,13 +1,11 @@
 --- 
-- 
-  name: "Hello Ansible - quick start"
+- name: "Hello Ansible - quick start"
   hosts: localhost
   sudo: yes
 
-  tasks: 
-    - 
-      name: "Hello server"
+tasks: 
+    - name: "Hello server"
       shell: "date >> now.txt"
      
-      name: echo hello world
+    - name: echo hello world
       shell: echo "Hello World!" > bala.txt

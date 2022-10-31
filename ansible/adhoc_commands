@@ -1,0 +1,29 @@
+
+#### Ansible Adhoc commands ####
+
+1. To get uptime of the system
+% ansible localhost -m command -a uptime
+                                                                                                                                                                  ✭
+[WARNING]: No inventory was parsed, only implicit localhost is available
+localhost | CHANGED | rc=0 >>
+14:56  up  4:42, 2 users, load averages: 1.90 2.72 3.00
+
+ 
+(base) [balaji@balajis-MacBook-Air:~/Development/gitfolder/ansible on master]
+
+2. to get date of the system
+% ansible localhost -a date                                                                                                                                                                               ✭
+[WARNING]: No inventory was parsed, only implicit localhost is available
+localhost | CHANGED | rc=0 >>
+Mon Oct 31 14:57:08 IST 2022
+
+3. to get gather facts of the system
+
+ansible localhost -m ansible.builtin.setup
+
+4. to get logged in user details
+
+% ansible localhost -m ansible.builtin.shell -a 'echo $USER'                                                   ✭
+[WARNING]: No inventory was parsed, only implicit localhost is available
+localhost | CHANGED | rc=0 >>
+balaji

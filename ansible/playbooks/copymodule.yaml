@@ -1,18 +1,11 @@
 --- 
 - 
-  name: "Hello Ansible - quick start"
+  name: 'Hello Ansible - quick start'
   hosts: localhost
-  sudo: yes
-
   tasks: 
     - 
       name: "Hello server"
       shell: "date >> now.txt"
      
-      name: copying file modulu 
+    - name: 'copying file modulu'
       copy: src=/root/ansible.txt dest=/root/ owner=root grou=root mode=0644 backup=yes 
-
-      #name: "INSTALLING THE  httpd"
-      #apt: 
-       # name: httpd
-       # state: present 
