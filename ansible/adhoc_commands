@@ -27,3 +27,21 @@ ansible localhost -m ansible.builtin.setup
 [WARNING]: No inventory was parsed, only implicit localhost is available
 localhost | CHANGED | rc=0 >>
 balaji
+
+5. to create a test.txt file
+
+ansible localhost -m shell -a "touch test.txt"
+[WARNING]: No inventory was parsed, only implicit localhost is available
+localhost | CHANGED | rc=0 >>
+
+
+6.✗ ansible localhost -a uptime
+[WARNING]: No inventory was parsed, only implicit localhost is available
+localhost | CHANGED | rc=0 >>
+21:31  up  1:07, 2 users, load averages: 1.34 1.66 2.23
+
+7.✗ ansible localhost -a who
+[WARNING]: No inventory was parsed, only implicit localhost is available
+localhost | CHANGED | rc=0 >>
+balaji   console  Nov  1 20:26
+balaji   ttys000  Nov  1 20:26
