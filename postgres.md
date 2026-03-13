@@ -37,4 +37,13 @@ rooms=# \dt   ### TO VIEW THE CREATED TABLE
 --------+-----------+-------+----------
  public | inventory | table | KSSSSSSSS
 
- 
+### INSERT TABLE ####
+
+rooms=# INSERT INTO inventory (room_name, capacity)
+VALUES ('Conference Room A', 10);
+INSERT 0 1
+rooms=# SELECT * FROM inventory;
+ id |     room_name     | capacity | is_available
+----+-------------------+----------+--------------
+  1 | Conference Room A |       10 | t
+(1 row)
