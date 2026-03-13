@@ -47,3 +47,12 @@ rooms=# SELECT * FROM inventory;
 ----+-------------------+----------+--------------
   1 | Conference Room A |       10 | t
 (1 row)
+
+
+rooms=# UPDATE inventory
+SET capacity = 12
+WHERE room_name = 'Conference Room A';
+UPDATE 1
+rooms=# DELETE FROM inventory
+WHERE room_name = 'Conference Room A';
+DELETE 1
