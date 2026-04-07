@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>Property Management System</title>
+    <script src="./Property Management System_files/saved_resource"></script>
+    <script src="./Property Management System_files/saved_resource"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+   
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 20px; background-color: #f4f7f9; }
+        .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .controls { margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .search-box { width: 100%; max-width: 350px; padding: 10px; border: 2px solid #007bff; border-radius: 5px; margin-top: 10px; }
+        
+        button { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; font-size: 0.85rem; }
+        .btn-excel { background-color: #28a745; }
+        .btn-pdf { background-color: #dc3545; }
+        .btn-save { background-color: #007bff; }
+        .btn-wa { background-color: #25D366; padding: 2px 5px; font-size: 0.65rem; border-radius: 3px; }
+        .btn-call { background-color: #007bff; padding: 2px 5px; font-size: 0.65rem; border-radius: 3px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.7rem; }
+        th, td { border: 1px solid #ddd; padding: 4px; text-align: left; }
+        th { background: #f4f4f4; white-space: nowrap; }
+        input, select { width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 0.75rem; }
+        
+        .contact-col { display: flex; flex-direction: column; gap: 3px; min-width: 150px; }
+        .contact-row { display: flex; gap: 2px; align-items: center; }
+        .status-paid { background-color: #d4edda !important; font-weight: bold; }
+        .status-unpaid { background-color: #f8d7da !important; font-weight: bold; }
+        .hidden-row { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Property Billing Portal</h1>
+        <div style="display:flex; gap:15px;">
+            <div><label style="font-size:11px; font-weight:bold;">BILLING MONTH</label><br><input type="month" id="billing-month" onchange="saveCurrent()"></div>
+            <div><label style="font-size:11px; font-weight:bold;">ISSUE DATE</label><br><input type="date" id="billing-date" onchange="saveCurrent()"></div>
+        </div>
+        
+        <input type="text" id="search-input" class="search-box" placeholder="🔍 Search Room, Name or Service No..." onkeyup="filterTable()">
+
+        <div class="controls">
+            <button class="btn-save" onclick="saveToHistory()">Archive to History</button>
+            <button class="btn-excel" onclick="exportToExcel()">Excel</button>
+            <button class="btn-pdf" onclick="exportToPDF()">PDF</button>
+        </div>
+    </div>
+
+    <div id="report-content"><div id="app"><div class="card"><h2>A4 Apuroopa</h2><table id="table-B1"><thead><tr>
+                    <th width="50">No</th>
+                    <th>Tenant Name</th>
+                    <th>Service No</th>
+                    <th>Contacts</th>
+                    <th width="70">Rent</th>
+                    <th width="70">Elec</th>
+                    <th width="70">Water</th>
+                    <th width="80">Total</th>
+                    <th width="90">Status</th>
+                    <th>Note</th>
+                </tr></thead><tbody><tr class="tenant-row">
+                        <td><input type="text" id="no-B1-1" value="101" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B1-1" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B1-1" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B1-1" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,1, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,1, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B1-1" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,1, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,1, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B1-1" value="0" oninput="updateRow(&#39;B1&#39;,1)"></td>
+                        <td><input type="number" id="c-B1-1" value="0" oninput="updateRow(&#39;B1&#39;,1)"></td>
+                        <td><input type="number" id="w-B1-1" value="0" oninput="updateRow(&#39;B1&#39;,1)"></td>
+                        <td><b id="t-B1-1">6000.00</b></td>
+                        <td><select id="s-B1-1" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B1-1" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B1-2" value="102" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B1-2" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B1-2" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B1-2" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,2, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,2, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B1-2" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,2, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,2, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B1-2" value="0" oninput="updateRow(&#39;B1&#39;,2)"></td>
+                        <td><input type="number" id="c-B1-2" value="0" oninput="updateRow(&#39;B1&#39;,2)"></td>
+                        <td><input type="number" id="w-B1-2" value="0" oninput="updateRow(&#39;B1&#39;,2)"></td>
+                        <td><b id="t-B1-2">3770.00</b></td>
+                        <td><select id="s-B1-2" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B1-2" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B1-3" value="103" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B1-3" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B1-3" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B1-3" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,3, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,3, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B1-3" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,3, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,3, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B1-3" value="0" oninput="updateRow(&#39;B1&#39;,3)"></td>
+                        <td><input type="number" id="c-B1-3" value="0" oninput="updateRow(&#39;B1&#39;,3)"></td>
+                        <td><input type="number" id="w-B1-3" value="0" oninput="updateRow(&#39;B1&#39;,3)"></td>
+                        <td><b id="t-B1-3">0.00</b></td>
+                        <td><select id="s-B1-3" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B1-3" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B1-4" value="104" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B1-4" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B1-4" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B1-4" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,4, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,4, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B1-4" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,4, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,4, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B1-4" value="0" oninput="updateRow(&#39;B1&#39;,4)"></td>
+                        <td><input type="number" id="c-B1-4" value="0" oninput="updateRow(&#39;B1&#39;,4)"></td>
+                        <td><input type="number" id="w-B1-4" value="0" oninput="updateRow(&#39;B1&#39;,4)"></td>
+                        <td><b id="t-B1-4">0.00</b></td>
+                        <td><select id="s-B1-4" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B1-4" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B1-5" value="105" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B1-5" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B1-5" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B1-5" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,5, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,5, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B1-5" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,5, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,5, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B1-5" value="0" oninput="updateRow(&#39;B1&#39;,5)"></td>
+                        <td><input type="number" id="c-B1-5" value="0" oninput="updateRow(&#39;B1&#39;,5)"></td>
+                        <td><input type="number" id="w-B1-5" value="0" oninput="updateRow(&#39;B1&#39;,5)"></td>
+                        <td><b id="t-B1-5">0.00</b></td>
+                        <td><select id="s-B1-5" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B1-5" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B1-6" value="106" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B1-6" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B1-6" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B1-6" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,6, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,6, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B1-6" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,6, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,6, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B1-6" value="0" oninput="updateRow(&#39;B1&#39;,6)"></td>
+                        <td><input type="number" id="c-B1-6" value="0" oninput="updateRow(&#39;B1&#39;,6)"></td>
+                        <td><input type="number" id="w-B1-6" value="0" oninput="updateRow(&#39;B1&#39;,6)"></td>
+                        <td><b id="t-B1-6">0.00</b></td>
+                        <td><select id="s-B1-6" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B1-6" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B1-7" value="107" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B1-7" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B1-7" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B1-7" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,7, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,7, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B1-7" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,7, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,7, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B1-7" value="0" oninput="updateRow(&#39;B1&#39;,7)"></td>
+                        <td><input type="number" id="c-B1-7" value="0" oninput="updateRow(&#39;B1&#39;,7)"></td>
+                        <td><input type="number" id="w-B1-7" value="0" oninput="updateRow(&#39;B1&#39;,7)"></td>
+                        <td><b id="t-B1-7">0.00</b></td>
+                        <td><select id="s-B1-7" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B1-7" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B1-8" value="108" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B1-8" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B1-8" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B1-8" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,8, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,8, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B1-8" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,8, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,8, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B1-8" value="0" oninput="updateRow(&#39;B1&#39;,8)"></td>
+                        <td><input type="number" id="c-B1-8" value="0" oninput="updateRow(&#39;B1&#39;,8)"></td>
+                        <td><input type="number" id="w-B1-8" value="0" oninput="updateRow(&#39;B1&#39;,8)"></td>
+                        <td><b id="t-B1-8">0.00</b></td>
+                        <td><select id="s-B1-8" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B1-8" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B1-9" value="109" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B1-9" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B1-9" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B1-9" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,9, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,9, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B1-9" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B1&#39;,9, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B1&#39;,9, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B1-9" value="0" oninput="updateRow(&#39;B1&#39;,9)"></td>
+                        <td><input type="number" id="c-B1-9" value="0" oninput="updateRow(&#39;B1&#39;,9)"></td>
+                        <td><input type="number" id="w-B1-9" value="0" oninput="updateRow(&#39;B1&#39;,9)"></td>
+                        <td><b id="t-B1-9">0.00</b></td>
+                        <td><select id="s-B1-9" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B1-9" oninput="saveCurrent()"></td>
+                    </tr></tbody></table><div style="text-align:right; font-weight:bold; margin-top:10px; color:#007bff;" id="grand-B1">Building Total: ₹9770.00</div></div><div class="card"><h2>Vani Nagar</h2><table id="table-B2"><thead><tr>
+                    <th width="50">No</th>
+                    <th>Tenant Name</th>
+                    <th>Service No</th>
+                    <th>Contacts</th>
+                    <th width="70">Rent</th>
+                    <th width="70">Elec</th>
+                    <th width="70">Water</th>
+                    <th width="80">Total</th>
+                    <th width="90">Status</th>
+                    <th>Note</th>
+                </tr></thead><tbody><tr class="tenant-row">
+                        <td><input type="text" id="no-B2-1" value="101" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B2-1" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B2-1" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B2-1" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B2&#39;,1, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B2&#39;,1, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B2-1" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B2&#39;,1, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B2&#39;,1, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B2-1" value="0" oninput="updateRow(&#39;B2&#39;,1)"></td>
+                        <td><input type="number" id="c-B2-1" value="0" oninput="updateRow(&#39;B2&#39;,1)"></td>
+                        <td><input type="number" id="w-B2-1" value="0" oninput="updateRow(&#39;B2&#39;,1)"></td>
+                        <td><b id="t-B2-1">0.00</b></td>
+                        <td><select id="s-B2-1" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B2-1" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B2-2" value="102" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B2-2" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B2-2" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B2-2" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B2&#39;,2, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B2&#39;,2, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B2-2" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B2&#39;,2, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B2&#39;,2, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B2-2" value="0" oninput="updateRow(&#39;B2&#39;,2)"></td>
+                        <td><input type="number" id="c-B2-2" value="0" oninput="updateRow(&#39;B2&#39;,2)"></td>
+                        <td><input type="number" id="w-B2-2" value="0" oninput="updateRow(&#39;B2&#39;,2)"></td>
+                        <td><b id="t-B2-2">0.00</b></td>
+                        <td><select id="s-B2-2" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B2-2" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B2-3" value="103" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B2-3" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B2-3" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B2-3" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B2&#39;,3, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B2&#39;,3, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B2-3" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B2&#39;,3, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B2&#39;,3, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B2-3" value="0" oninput="updateRow(&#39;B2&#39;,3)"></td>
+                        <td><input type="number" id="c-B2-3" value="0" oninput="updateRow(&#39;B2&#39;,3)"></td>
+                        <td><input type="number" id="w-B2-3" value="0" oninput="updateRow(&#39;B2&#39;,3)"></td>
+                        <td><b id="t-B2-3">0.00</b></td>
+                        <td><select id="s-B2-3" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B2-3" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B2-4" value="104" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B2-4" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B2-4" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B2-4" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B2&#39;,4, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B2&#39;,4, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B2-4" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B2&#39;,4, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B2&#39;,4, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B2-4" value="0" oninput="updateRow(&#39;B2&#39;,4)"></td>
+                        <td><input type="number" id="c-B2-4" value="0" oninput="updateRow(&#39;B2&#39;,4)"></td>
+                        <td><input type="number" id="w-B2-4" value="0" oninput="updateRow(&#39;B2&#39;,4)"></td>
+                        <td><b id="t-B2-4">0.00</b></td>
+                        <td><select id="s-B2-4" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B2-4" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B2-5" value="105" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B2-5" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B2-5" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B2-5" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B2&#39;,5, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B2&#39;,5, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B2-5" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B2&#39;,5, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B2&#39;,5, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B2-5" value="0" oninput="updateRow(&#39;B2&#39;,5)"></td>
+                        <td><input type="number" id="c-B2-5" value="0" oninput="updateRow(&#39;B2&#39;,5)"></td>
+                        <td><input type="number" id="w-B2-5" value="0" oninput="updateRow(&#39;B2&#39;,5)"></td>
+                        <td><b id="t-B2-5">0.00</b></td>
+                        <td><select id="s-B2-5" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B2-5" oninput="saveCurrent()"></td>
+                    </tr></tbody></table><div style="text-align:right; font-weight:bold; margin-top:10px; color:#007bff;" id="grand-B2">Total: ₹0.00</div></div><div class="card"><h2>B-06-67</h2><table id="table-B3"><thead><tr>
+                    <th width="50">No</th>
+                    <th>Tenant Name</th>
+                    <th>Service No</th>
+                    <th>Contacts</th>
+                    <th width="70">Rent</th>
+                    <th width="70">Elec</th>
+                    <th width="70">Water</th>
+                    <th width="80">Total</th>
+                    <th width="90">Status</th>
+                    <th>Note</th>
+                </tr></thead><tbody><tr class="tenant-row">
+                        <td><input type="text" id="no-B3-1" value="Room 1" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B3-1" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B3-1" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B3-1" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B3&#39;,1, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B3&#39;,1, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B3-1" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B3&#39;,1, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B3&#39;,1, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B3-1" value="0" oninput="updateRow(&#39;B3&#39;,1)"></td>
+                        <td><input type="number" id="c-B3-1" value="0" oninput="updateRow(&#39;B3&#39;,1)"></td>
+                        <td><input type="number" id="w-B3-1" value="0" oninput="updateRow(&#39;B3&#39;,1)"></td>
+                        <td><b id="t-B3-1">0.00</b></td>
+                        <td><select id="s-B3-1" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B3-1" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B3-2" value="Room 2" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B3-2" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B3-2" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B3-2" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B3&#39;,2, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B3&#39;,2, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B3-2" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B3&#39;,2, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B3&#39;,2, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B3-2" value="0" oninput="updateRow(&#39;B3&#39;,2)"></td>
+                        <td><input type="number" id="c-B3-2" value="0" oninput="updateRow(&#39;B3&#39;,2)"></td>
+                        <td><input type="number" id="w-B3-2" value="0" oninput="updateRow(&#39;B3&#39;,2)"></td>
+                        <td><b id="t-B3-2">0.00</b></td>
+                        <td><select id="s-B3-2" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B3-2" oninput="saveCurrent()"></td>
+                    </tr><tr class="tenant-row">
+                        <td><input type="text" id="no-B3-3" value="Shop 1" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-B3-3" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-B3-3" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-B3-3" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B3&#39;,3, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B3&#39;,3, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-B3-3" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA(&#39;B3&#39;,3, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel(&#39;B3&#39;,3, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-B3-3" value="0" oninput="updateRow(&#39;B3&#39;,3)"></td>
+                        <td><input type="number" id="c-B3-3" value="0" oninput="updateRow(&#39;B3&#39;,3)"></td>
+                        <td><input type="number" id="w-B3-3" value="0" oninput="updateRow(&#39;B3&#39;,3)"></td>
+                        <td><b id="t-B3-3">0.00</b></td>
+                        <td><select id="s-B3-3" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-B3-3" oninput="saveCurrent()"></td>
+                    </tr></tbody></table><div style="text-align:right; font-weight:bold; margin-top:10px; color:#007bff;" id="grand-B3">Total: ₹0.00</div></div></div></div>
+
+    <script>
+        let db;
+        // Configuration for your 3 buildings
+        const buildings = [
+            {id:'B1', name:"A4 Apuroopa", units: 9, type: "Room"},
+            {id:'B2', name:"Vani Nagar", units: 5, type: "Room"},
+            {id:'B3', name:"B-06-67", custom: ["Room 1", "Room 2", "Shop 1"]}
+        ];
+
+        const request = indexedDB.open("PropertyProDB_V6", 1);
+        request.onupgradeneeded = (e) => {
+            db = e.target.result;
+            db.createObjectStore("current");
+            db.createObjectStore("history", { autoIncrement: true });
+        };
+        request.onsuccess = (e) => {
+            db = e.target.result;
+            renderApp();
+            loadCurrent();
+        };
+
+        function renderApp() {
+            let html = "";
+            buildings.forEach(b => {
+                html += `<div class="card"><h2>${b.name}</h2><table id="table-${b.id}"><thead><tr>
+                    <th width="50">No</th>
+                    <th>Tenant Name</th>
+                    <th>Service No</th>
+                    <th>Contacts</th>
+                    <th width="70">Rent</th>
+                    <th width="70">Elec</th>
+                    <th width="70">Water</th>
+                    <th width="80">Total</th>
+                    <th width="90">Status</th>
+                    <th>Note</th>
+                </tr></thead><tbody>`;
+                
+                const unitCount = b.custom ? b.custom.length : b.units;
+                for (let i=1; i<=unitCount; i++) {
+                    const label = b.custom ? b.custom[i-1] : (100 + i);
+                    html += `<tr class="tenant-row">
+                        <td><input type="text" id="no-${b.id}-${i}" value="${label}" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="name-${b.id}-${i}" class="search-data" oninput="saveCurrent()"></td>
+                        <td><input type="text" id="svc-${b.id}-${i}" class="search-data" placeholder="Svc #" oninput="saveCurrent()"></td>
+                        <td class="contact-col">
+                            <div class="contact-row">
+                                <input type="tel" id="tel1-${b.id}-${i}" placeholder="P1" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA('${b.id}',${i}, 1)">WA</button>
+                                <button class="btn-call" onclick="callTel('${b.id}',${i}, 1)">📞</button>
+                            </div>
+                            <div class="contact-row">
+                                <input type="tel" id="tel2-${b.id}-${i}" placeholder="P2" oninput="saveCurrent()">
+                                <button class="btn-wa" onclick="sendWA('${b.id}',${i}, 2)">WA</button>
+                                <button class="btn-call" onclick="callTel('${b.id}',${i}, 2)">📞</button>
+                            </div>
+                        </td>
+                        <td><input type="number" id="r-${b.id}-${i}" value="0" oninput="updateRow('${b.id}',${i})"></td>
+                        <td><input type="number" id="c-${b.id}-${i}" value="0" oninput="updateRow('${b.id}',${i})"></td>
+                        <td><input type="number" id="w-${b.id}-${i}" value="0" oninput="updateRow('${b.id}',${i})"></td>
+                        <td><b id="t-${b.id}-${i}">0.00</b></td>
+                        <td><select id="s-${b.id}-${i}" onchange="updateStatusStyle(this);saveCurrent()">
+                            <option value="Unpaid">Unpaid</option><option value="Paid">Paid</option>
+                        </select></td>
+                        <td><input type="text" id="rem-${b.id}-${i}" oninput="saveCurrent()"></td>
+                    </tr>`;
+                }
+                html += `</tbody></table><div style="text-align:right; font-weight:bold; margin-top:10px; color:#007bff;" id="grand-${b.id}">Total: ₹0.00</div></div>`;
+            });
+            document.getElementById('app').innerHTML = html;
+        }
+
+        function callTel(bId, rowId, idx) {
+            const num = document.getElementById(`tel${idx}-${bId}-${rowId}`).value;
+            if(num) window.location.href = `tel:${num}`;
+        }
+
+        function sendWA(bId, rowId, idx) {
+            const num = document.getElementById(`tel${idx}-${bId}-${rowId}`).value.replace(/\D/g,'');
+            const total = document.getElementById(`t-${bId}-${rowId}`).innerText;
+            if(!num) return alert("No number!");
+            window.open(`https://wa.me{num}?text=Rent%20Due:%20₹${total}`, '_blank');
+        }
+
+        function updateRow(bId, rowId) {
+            const r = parseFloat(document.getElementById(`r-${bId}-${rowId}`).value) || 0;
+            const c = parseFloat(document.getElementById(`c-${bId}-${rowId}`).value) || 0;
+            const w = parseFloat(document.getElementById(`w-${bId}-${rowId}`).value) || 0;
+            document.getElementById(`t-${bId}-${rowId}`).innerText = (r + c + w).toFixed(2);
+            updateGrandTotal(bId);
+            saveCurrent();
+        }
+
+        function updateGrandTotal(bId) {
+            let total = 0;
+            document.querySelectorAll(`#table-${bId} b`).forEach(el => total += parseFloat(el.innerText) || 0);
+            document.getElementById(`grand-${bId}`).innerText = 'Building Total: ₹' + total.toFixed(2);
+        }
+
+        function updateStatusStyle(sel) {
+            sel.parentElement.className = sel.value === "Paid" ? 'status-paid' : 'status-unpaid';
+        }
+
+        function saveCurrent() {
+            const data = {};
+            document.querySelectorAll('input, select').forEach(el => data[el.id] = el.value);
+            db.transaction("current", "readwrite").objectStore("current").put(data, "latest");
+        }
+
+        function loadCurrent() {
+            db.transaction("current").objectStore("current").get("latest").onsuccess = (e) => {
+                const data = e.target.result;
+                if (!data) return;
+                for (const id in data) {
+                    const el = document.getElementById(id);
+                    if (el) { el.value = data[id]; if(id.startsWith('s-')) updateStatusStyle(el); }
+                }
+                buildings.forEach(b => {
+                    const count = b.custom ? b.custom.length : b.units;
+                    for(let i=1; i<=count; i++) updateRow(b.id, i);
+                });
+            };
+        }
+
+        function filterTable() {
+            const q = document.getElementById('search-input').value.toLowerCase();
+            document.querySelectorAll('.tenant-row').forEach(row => {
+                const text = row.innerText.toLowerCase();
+                const inputs = Array.from(row.querySelectorAll('input')).map(i => i.value.toLowerCase()).join(' ');
+                row.classList.toggle('hidden-row', !text.includes(q) && !inputs.includes(q));
+            });
+        }
+
+        function saveToHistory() {
+            const month = document.getElementById('billing-month').value;
+            if (!month) return alert("Select month!");
+            const data = {};
+            document.querySelectorAll('input, select').forEach(el => data[el.id] = el.value);
+            db.transaction("history", "readwrite").objectStore("history").add({ month, date: new Date().toLocaleString(), data });
+            alert("Archived to history!");
+        }
+
+        function exportToExcel() {
+            const wb = XLSX.utils.book_new();
+            buildings.forEach(b => XLSX.utils.book_append_sheet(wb, XLSX.utils.table_to_sheet(document.querySelector(`#table-${b.id}`)), b.name));
+            XLSX.writeFile(wb, `Property_Report.xlsx`);
+        }
+
+        function exportToPDF() {
+            html2pdf().from(document.getElementById('report-content')).set({
+                margin:0.2, filename:'Rent_Report.pdf', jsPDF:{unit:'in', format:'a4', orientation:'landscape'}
+            }).save();
+        }
+        const SUPABASE_URL = 'https://your-project.supabase.co';
+        const SUPABASE_KEY = 'your-anon-public-key';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    </script>
+
+
+
+</body></html>
